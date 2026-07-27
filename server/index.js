@@ -7,8 +7,10 @@ import { fileURLToPath } from 'url';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 
-// Load environment variables
-dotenv.config();
+// Safely load dotenv only if not in Vercel (Vercel injects env vars automatically)
+if (process.env.VERCEL !== '1') {
+  dotenv.config();
+}
 
 import productRoutes from './routes/products.js';
 import contactRoutes from './routes/contact.js';

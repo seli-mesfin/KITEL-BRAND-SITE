@@ -82,32 +82,49 @@ if (process.env.VERCEL !== '1') {
 
 import { MongoMemoryServer } from 'mongodb-memory-server';
 
-// Database Connection (Automatic fallback to MongoMemoryServer if local MongoDB is offline)
+// --- Database Connection (Serverless Optimized) ---
+let cachedDb = null;
+
 async function connectDB() {
-  let MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/kitel';
+  if (cachedDb && mongoose.connection.readyState === 1) {
+    return cachedDb;
+  }
+
+  const MONGODB_URI = process.env.MONGODB_URI;
+  
+  if (!MONGODB_URI) {
+    if (process.env.NODE_ENV === 'production') {
+      console.error('FATAL: MONGODB_URI environment variable is missing in production.');
+    }
+    throw new Error('Please define the MONGODB_URI environment variable');
+  }
 
   try {
-    await mongoose.connect(MONGODB_URI, {
-      serverSelectionTimeoutMS: 3000, // Fail fast to fallback
-    });
-    console.log('Connected to Local MongoDB Database: Kitel');
+    const opts = {
+      serverSelectionTimeoutMS: 5000,
+      bufferCommands: false,
+    };
+    
+    cachedDb = await mongoose.connect(MONGODB_URI, opts);
+    console.log('Connected to MongoDB Database: Kitel');
+    return cachedDb;
   } catch (err) {
-    if (process.env.NODE_ENV === 'production') {
-      console.error('FATAL: MongoDB connection failed in production.', err.message);
-      process.exit(1);
-    } else {
-      console.log('Local MongoDB not found. Starting In-Memory MongoDB Server...');
-      try {
-        const mongoServer = await MongoMemoryServer.create();
-        MONGODB_URI = mongoServer.getUri();
-        await mongoose.connect(MONGODB_URI);
-        console.log('Connected to In-Memory MongoDB Database: Kitel (Data persistence ACTIVE)');
-      } catch (memoryErr) {
-        console.warn('WARNING: Could not start In-Memory MongoDB. API running in memory-only mode.');
-      }
-    }
+    console.error('MongoDB connection error:', err);
+    throw err;
   }
 }
+
+// Ensure database connects before handling API requests on serverless
+app.use(async (req, res, next) => {
+  if (req.path.startsWith('/api')) {
+    try {
+      await connectDB();
+    } catch (e) {
+      return res.status(500).json({ error: 'Database connection failed. Please try again shortly.' });
+    }
+  }
+  next();
+});
 
 connectDB();
 

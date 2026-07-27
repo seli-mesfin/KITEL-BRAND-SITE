@@ -1,104 +1,120 @@
 import React, { useEffect, useState } from 'react';
-import useInView from '../../hooks/useInView';
 
-export default function HeroSection() {
-  const { ref, isInView } = useInView({ threshold: 0.2, once: true });
-  const [mounted, setMounted] = useState(false);
+const HeroSection = () => {
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    setIsVisible(true);
   }, []);
 
   return (
-    <section ref={ref} className="section html-overlay" style={{ height: '100vh', padding: 0 }}>
-      <div 
-        className="section-inner" 
-        style={{ 
-          display: 'flex', 
-          flexDirection: 'column', 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          textAlign: 'center',
-          height: '100%',
-          padding: '0 20px'
-        }}
-      >
-        <div style={{ maxWidth: '800px', width: '100%' }}>
-          <h1 
-            className={`hero-title ${mounted ? 'animate-fade-in-up' : ''}`}
-            style={{ 
-              animationName: mounted ? 'fadeInUp' : 'none',
-              animationDuration: '1.2s',
-              animationTimingFunction: 'ease-out',
-              animationFillMode: 'both',
-              marginBottom: '1rem',
-              fontSize: 'clamp(2.5rem, 6vw, 4.5rem)'
-            }}
-          >
-            Growing Digital Futures
-          </h1>
-          
-          <p 
-            className={`hero-tagline delay-2 ${mounted ? 'animate-fade-in-up' : ''}`} 
-            style={{ 
-              margin: '0 auto 1.5rem auto',
-              letterSpacing: '0.15em'
-            }}
-          >
-            Simply Connected
-          </p>
+    <>
+      {/* ═══ TIER 1: HERO — Clean White Theme ═══ */}
+      <section id="home" className="t-hero">
+        <div className="t-hero-inner">
+          <div className={`t-hero-text ${isVisible ? 'animate-fade-in-up' : ''}`} style={{ opacity: isVisible ? 1 : 0 }}>
+            
+            <h1 style={{ color: 'var(--kitel-primary)', marginBottom: '1.25rem' }}>
+              Growing Digital<br />
+              <span style={{ color: 'var(--kitel-primary)' }}>Futures.</span>
+            </h1>
 
-          <p 
-            className={`delay-3 ${mounted ? 'animate-fade-in-up' : ''}`} 
-            style={{ 
-              margin: '0 auto 3rem auto',
-              fontSize: '1.1rem',
-              color: 'var(--kitel-text-muted)',
-              maxWidth: '550px'
-            }}
-          >
-            Technology simplified. Systems integrated. Businesses empowered.
-          </p>
-          
-          <div 
-            className={`delay-4 ${mounted ? 'animate-fade-in-up' : ''}`} 
-            style={{ 
-              display: 'flex', 
-              gap: '1rem', 
-              justifyContent: 'center',
-              flexWrap: 'wrap'
-            }}
-          >
-            <a href="#contact" className="btn-primary">
-              <span>Start Your Project &rarr;</span>
-            </a>
-            <a href="#services" className="btn-secondary">
-              Explore Our Work
-            </a>
+            <p style={{ color: 'rgba(26, 46, 18, 0.78)', fontSize: '1.05rem', lineHeight: 1.75, maxWidth: '520px', marginBottom: '2rem' }}>
+              Derived from the Amharic word for <em>leaf</em>, Kitel connects Ethiopian innovation with global digital networks — creating intelligent, scalable software solutions.
+            </p>
+
+            <div className="t-hero-buttons">
+              <button 
+                className="t-btn-fill" 
+                style={{ background: 'var(--kitel-primary)', color: '#ffffff' }}
+                onClick={() => document.getElementById('contact')?.scrollIntoView({behavior: 'smooth'})}
+              >
+                Start Your Project
+              </button>
+              <button 
+                className="t-btn-outline" 
+                style={{ color: 'var(--kitel-primary)', borderColor: 'var(--kitel-primary)' }}
+                onClick={() => document.getElementById('services')?.scrollIntoView({behavior: 'smooth'})}
+              >
+                Learn More
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-      
-      {/* Scroll indicator */}
-      <div 
-        className={`delay-6 ${mounted ? 'animate-fade-in' : ''}`}
-        style={{
-          position: 'absolute',
-          bottom: '2rem',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '0.5rem',
-          opacity: 0.5
-        }}
-      >
-        <span style={{ fontSize: '0.7rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--kitel-text-muted)' }}>Scroll to Explore</span>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--kitel-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="animate-float">
-          <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
-      </div>
-    </section>
+      </section>
+
+      {/* ═══ TIER 2: FEATURES — Clean Band ═══ */}
+      <section className="t-features">
+        <div className="t-features-inner">
+          <h2 className="t-features-heading">
+            We provide an outstanding digital experience
+          </h2>
+
+          <div className="t-features-grid">
+            {/* Card 1 */}
+            <div className="t-feature-card">
+              <div className="t-feature-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                  <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+              </div>
+              <h3>What We Do</h3>
+              <p>We design and build modern web applications, custom enterprise software, and integrated IT infrastructure that drives real business results.</p>
+              <button className="t-btn-card" onClick={() => document.getElementById('about')?.scrollIntoView({behavior: 'smooth'})}>
+                Read More
+              </button>
+            </div>
+
+            {/* Card 2 */}
+            <div className="t-feature-card">
+              <div className="t-feature-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="3" />
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                </svg>
+              </div>
+              <h3>Our Services</h3>
+              <p>From web development and access control to custom system design and IT consulting — end-to-end digital transformation solutions.</p>
+              <button className="t-btn-card" onClick={() => document.getElementById('services')?.scrollIntoView({behavior: 'smooth'})}>
+                Read More
+              </button>
+            </div>
+
+            {/* Card 3 */}
+            <div className="t-feature-card">
+              <div className="t-feature-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                </svg>
+              </div>
+              <h3>Our Advantages</h3>
+              <p>Ethiopian roots with global vision. We blend local market knowledge with cutting-edge technology to deliver solutions that truly fit.</p>
+              <button className="t-btn-card" onClick={() => document.getElementById('whykitel')?.scrollIntoView({behavior: 'smooth'})}>
+                Read More
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ TIER 3: PROFESSIONAL BANNER ═══ */}
+      <section className="t-pro-banner">
+        <div className="t-pro-inner">
+          <div className="t-pro-text">
+            <h2>We Are Professionals</h2>
+            <p>With years of experience delivering enterprise-grade solutions across Ethiopia and beyond, Kitel combines creative design with robust engineering to turn your digital vision into reality.</p>
+            <p>Our team is committed to quality, transparency, and measurable results. We build lasting partnerships, not just software.</p>
+          </div>
+          <div className="t-pro-cta">
+            <button className="t-btn-fill" onClick={() => document.getElementById('contact')?.scrollIntoView({behavior: 'smooth'})}>
+              Get In Touch
+            </button>
+          </div>
+        </div>
+      </section>
+    </>
   );
-}
+};
+
+export default HeroSection;

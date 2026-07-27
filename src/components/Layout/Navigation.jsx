@@ -1,50 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import TransparentLogo from './TransparentLogo';
 
-export default function Navigation({ scrollProgress = 0 }) {
+export default function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
-  // Add glassmorphic background when scrolled slightly
-  const isScrolled = scrollProgress > 0.02;
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
 
-  // Determine active section based on scroll progress
-  // Hero (0), About (0.25), Services (0.5), Why Kitel (0.75), Contact (1.0)
-  const getActiveSection = () => {
-    if (scrollProgress < 0.12) return 'home';
-    if (scrollProgress < 0.37) return 'about';
-    if (scrollProgress < 0.62) return 'services';
-    if (scrollProgress < 0.87) return 'whykitel';
-    return 'contact';
-  };
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+      
+      const sections = ['home', 'about', 'services', 'portfolio', 'whykitel', 'contact'];
+      for (const section of sections.reverse()) {
+        const element = document.getElementById(section);
+        if (element && window.scrollY >= element.offsetTop - 100) {
+          setActiveSection(section);
+          break;
+        }
+      }
+    };
 
-  const activeSection = getActiveSection();
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleNavClick = (e, targetId) => {
     e.preventDefault();
     setMobileMenuOpen(false);
     
-    // Smooth scroll is tricky with the custom scroll setup, 
-    // so we approximate it by calculating the target progress and scrolling window
-    const targets = {
-      'home': 0,
-      'about': 0.25,
-      'services': 0.50,
-      'whykitel': 0.75,
-      'contact': 1.0
-    };
-    
-    const targetProgress = targets[targetId];
-    if (targetProgress !== undefined) {
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      window.scrollTo({
-        top: docHeight * targetProgress,
-        behavior: 'smooth'
-      });
+    const element = document.getElementById(targetId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    } else if (targetId === 'home') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
   const navLinks = [
+    { id: 'home', label: 'Home' },
     { id: 'about', label: 'About' },
     { id: 'services', label: 'Services' },
+    { id: 'portfolio', label: 'Portfolio' },
     { id: 'whykitel', label: 'Why Kitel' },
     { id: 'contact', label: 'Contact' }
   ];
@@ -56,9 +52,16 @@ export default function Navigation({ scrollProgress = 0 }) {
           href="#home" 
           className="nav-logo"
           onClick={(e) => handleNavClick(e, 'home')}
-          style={{ display: 'flex', alignItems: 'center', padding: '0.2rem 0' }}
+          style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0' }}
         >
-          <img src="/logo.png" alt="Kitel" style={{ height: '72px', margin: '-8px 0', filter: 'drop-shadow(0 4px 12px rgba(67, 106, 50, 0.15))' }} />
+          <TransparentLogo 
+            height="85px" 
+            lightMode={false}
+            style={{ 
+              filter: 'drop-shadow(0 4px 12px rgba(67, 106, 50, 0.15))',
+              transition: 'transform 0.3s ease' 
+            }} 
+          />
         </a>
         
         <ul className="nav-links">
@@ -88,7 +91,7 @@ export default function Navigation({ scrollProgress = 0 }) {
 
       <div className={`mobile-nav-overlay ${mobileMenuOpen ? 'active' : ''}`}>
         <button 
-          style={{ position: 'absolute', top: '2rem', right: '2rem', background: 'none', border: 'none', color: 'var(--kitel-text-primary)', fontSize: '2rem', cursor: 'pointer' }}
+          style={{ position: 'absolute', top: '2rem', right: '2rem', background: 'none', border: 'none', color: 'var(--kitel-primary)', fontSize: '2rem', cursor: 'pointer' }}
           onClick={() => setMobileMenuOpen(false)}
         >
           &times;
@@ -100,7 +103,7 @@ export default function Navigation({ scrollProgress = 0 }) {
             href={`#${link.id}`}
             className="nav-link"
             onClick={(e) => handleNavClick(e, link.id)}
-            style={{ color: activeSection === link.id ? 'var(--kitel-secondary)' : 'var(--kitel-text-primary)' }}
+            style={{ color: activeSection === link.id ? 'var(--kitel-secondary)' : 'var(--kitel-primary)' }}
           >
             {link.label}
           </a>

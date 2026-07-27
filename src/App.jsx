@@ -1,19 +1,12 @@
-import React, { useState } from 'react';
-import { Canvas } from '@react-three/fiber';
-
-// Hooks
-import useScrollProgress from './hooks/useScrollProgress';
-import useMouseParallax from './hooks/useMouseParallax';
-
-// 3D Scene
-import Scene from './components/Three/Scene';
+import React from 'react';
 
 // Layout & Sections
 import Navigation from './components/Layout/Navigation';
+import Footer from './components/Layout/Footer';
 import HeroSection from './components/Sections/HeroSection';
 import AboutSection from './components/Sections/AboutSection';
 import ServicesSection from './components/Sections/ServicesSection';
-import MerchandiseShowroom from './components/Sections/MerchandiseShowroom';
+import PortfolioSection from './components/Sections/PortfolioSection';
 import WhyKitelSection from './components/Sections/WhyKitelSection';
 import ContactSection from './components/Sections/ContactSection';
 
@@ -21,46 +14,21 @@ import ContactSection from './components/Sections/ContactSection';
 import AIChatbot from './components/Chat/AIChatbot';
 
 function App() {
-  const { progress } = useScrollProgress(8); // Increased to 8 to account for ServicesSection
-  const mouse = useMouseParallax();
-  const [activeService, setActiveService] = useState(null);
-
   return (
     <>
-      <Navigation scrollProgress={progress} />
+      <Navigation />
 
-      {/* 3D Background Canvas */}
-      <div className="canvas-container">
-        <Canvas
-          camera={{ position: [0, 0, 5], fov: 45 }}
-          dpr={[1, 1.5]}
-          gl={{ antialias: true, alpha: true }}
-        >
-          <color attach="background" args={['#ffffff']} />
-          <Scene 
-            scrollProgress={progress} 
-            mouse={mouse} 
-            activeService={activeService}
-          />
-        </Canvas>
-      </div>
-
-      {/* Scrollable HTML Content Overlays */}
-      <main className="html-overlay" style={{ position: 'relative', zIndex: 1 }}>
+      <main className="main-content">
+        {/* Tier 1: Hero + Tier 2: Features + Tier 3: Pro Banner */}
         <HeroSection />
-        
-        {/* Add large gaps to allow the 3D transitions to play out between sections */}
-        <div style={{ height: '40vh' }} />
+
+        {/* Content Sections */}
         <AboutSection />
-        
-        <div style={{ height: '40vh' }} />
-        <ServicesSection onServiceHover={setActiveService} />
-        
-        <div style={{ height: '40vh' }} />
+        <ServicesSection />
+        <PortfolioSection />
         <WhyKitelSection />
-        
-        <div style={{ height: '40vh' }} />
         <ContactSection />
+        <Footer />
       </main>
 
       {/* Global Components */}

@@ -56,7 +56,7 @@ export default function ContactSection() {
   };
 
   return (
-    <section id="contact" className="section html-overlay">
+    <section id="contact" className="section">
       <div className="section-inner" ref={ref}>
         <div style={{ marginBottom: '4rem', textAlign: 'center' }}>
           <div className={`section-label ${isInView ? 'animate-fade-in-up' : ''}`} style={{ opacity: 0, justifyContent: 'center' }}>
@@ -162,8 +162,8 @@ export default function ContactSection() {
             
             <div style={{ marginBottom: '3rem' }}>
               <h4 style={{ color: 'var(--kitel-secondary)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>Phone</h4>
-              <a href="tel:+1234567890" style={{ color: 'var(--kitel-text-primary)', textDecoration: 'none', fontSize: '1.2rem', fontWeight: 500 }}>
-                +1 (234) 567-890
+              <a href="tel:+251989840600" style={{ color: 'var(--kitel-text-primary)', textDecoration: 'none', fontSize: '1.2rem', fontWeight: 500 }}>
+                +251 989840600
               </a>
             </div>
             
@@ -176,19 +176,6 @@ export default function ContactSection() {
         </div>
       </div>
       
-      <footer style={{ 
-        position: 'absolute', 
-        bottom: 0, 
-        left: 0, 
-        right: 0, 
-        padding: '2rem', 
-        textAlign: 'center',
-        borderTop: '1px solid var(--kitel-border)',
-        fontSize: '0.8rem',
-        color: 'var(--kitel-text-muted)'
-      }}>
-        &copy; {new Date().getFullYear()} Kitel. Simply Connected. All rights reserved.
-      </footer>
     </section>
   );
 }

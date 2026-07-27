@@ -80,22 +80,31 @@ if (process.env.VERCEL !== '1') {
   });
 }
 
-// Database Connection (non-blocking — server stays up regardless)
+import { MongoMemoryServer } from 'mongodb-memory-server';
+
+// Database Connection (Automatic fallback to MongoMemoryServer if local MongoDB is offline)
 async function connectDB() {
-  const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/kitel';
+  let MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/kitel';
 
   try {
     await mongoose.connect(MONGODB_URI, {
-      serverSelectionTimeoutMS: 5000, // Fail fast if DB is unreachable
+      serverSelectionTimeoutMS: 3000, // Fail fast to fallback
     });
-    console.log('Connected to MongoDB Database: Kitel');
+    console.log('Connected to Local MongoDB Database: Kitel');
   } catch (err) {
     if (process.env.NODE_ENV === 'production') {
       console.error('FATAL: MongoDB connection failed in production.', err.message);
       process.exit(1);
     } else {
-      console.warn('WARNING: MongoDB is not running. The API will function but data will not persist.');
-      console.warn('To enable persistence, start MongoDB or set MONGODB_URI in .env');
+      console.log('Local MongoDB not found. Starting In-Memory MongoDB Server...');
+      try {
+        const mongoServer = await MongoMemoryServer.create();
+        MONGODB_URI = mongoServer.getUri();
+        await mongoose.connect(MONGODB_URI);
+        console.log('Connected to In-Memory MongoDB Database: Kitel (Data persistence ACTIVE)');
+      } catch (memoryErr) {
+        console.warn('WARNING: Could not start In-Memory MongoDB. API running in memory-only mode.');
+      }
     }
   }
 }

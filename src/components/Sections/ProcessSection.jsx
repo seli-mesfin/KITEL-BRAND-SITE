@@ -14,7 +14,7 @@ export default function ProcessSection() {
   ];
 
   return (
-    <section id="process" className="section html-overlay">
+    <section id="process" className="section">
       <div className="section-inner" ref={ref}>
         <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
           <div className={`section-label ${isInView ? 'animate-fade-in-up' : ''}`} style={{ opacity: 0, justifyContent: 'center' }}>

@@ -60,11 +60,12 @@ app.use('/api/products', productRoutes);
 app.use('/api/contact', formLimiter, contactRoutes);
 app.use('/api/chat', chatRoutes);
 
-// Serve static files in production
+/// Serve static files in production
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../dist')));
 
-  app.get('*', (req, res) => {
+  // Fix: Use a valid path pattern instead of bare '*'
+  app.get(/^(?!\/api).+/, (req, res) => {
     res.sendFile(path.join(__dirname, '../dist/index.html'));
   });
 }
